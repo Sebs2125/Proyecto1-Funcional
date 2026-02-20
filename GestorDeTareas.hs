@@ -2,6 +2,7 @@ module GestorDeTareas where
 
 import System.IO
 
+-- Esmil Echavarria 10154964
 -- Sebastián Almánzar 10154600
 -- Ariel Diaz 10153927
 
@@ -46,6 +47,12 @@ eliminarTarea :: [Tarea] -> Int -> [Tarea]
 eliminarTarea tareas idEliminar =
   filter (\t -> obtenerIdDeTarea t /= idEliminar) tareas
 
+-- Funcion para leer entero
+leerentero :: String -> Maybe Int
+leerentero s = case reads s of -- Utiliza 'reads' para  verificar que sea numero.
+  [(val, "")] -> Just val
+  _ -> Nothing
+
 main :: IO ()
 main = menu []
 
@@ -74,8 +81,9 @@ menu tareas = do
     "2" -> do
       putStr "ID de la tarea a completar: "
       idStr <- getLine
-      let idInt = read idStr -- Convertimos texto a número
-      menu (completarTarea tareas idInt)
+      let n = maybe tareas (completarTarea tareas) (leerentero idStr)
+      -- Esto es como if si es valido lo completa, si no, no hace nada
+      menu n
     "3" -> do
       putStrLn "\n--- Tareas Pendientes ---"
       let pendientes = filter (\(Tarea _ _ comp) -> not comp) tareas
@@ -86,8 +94,8 @@ menu tareas = do
     "4" -> do
       putStr "ID de la tarea a eliminar: "
       idStr <- getLine
-      let idInt = read idStr
-      menu (eliminarTarea tareas idInt)
+      let n = maybe tareas (eliminarTarea tareas) (leerentero idStr)
+      menu n
     "5" -> putStrLn "Cerrando programa"
     _ -> do
       putStrLn "Opción no válida"
