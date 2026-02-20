@@ -44,8 +44,10 @@ completarTarea tareas idTarget =
 
 -- Eliminar una tarea por su ID
 eliminarTarea :: [Tarea] -> Int -> [Tarea]
-eliminarTarea tareas idEliminar =
-  filter (\t -> obtenerIdDeTarea t /= idEliminar) tareas
+eliminarTarea [] _ = []
+eliminarTarea (x : xs) elim
+  | obtenerIdDeTarea x == elim = xs -- Si coincide los datos se elimina la tarea
+  | otherwise = x : eliminarTarea xs elim -- Si no coincide se mantiene la tarea
 
 -- Funcion para leer entero
 leerentero :: String -> Maybe Int
